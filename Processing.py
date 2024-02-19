@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 # Kevin Xie
 
@@ -43,6 +44,22 @@ def plot_standard_curve():
             total += data_frame.iloc[i, 24]  
             counter += 1
 
+     # DMSO Calculation
+    DMSO_total = 0
+    for row in range(0,2):
+        for column in range(1,3):
+            DMSO_total += data_frame.iloc[row, column]
+
+    for row in range(14,16):
+        for column in range(1,3):
+            DMSO_total += data_frame.iloc[row, column]
+
+    # Non-stimulation calculation
+    # Exists in column 23
+    non_stim = 0
+    for row in range(0, 16):
+        non_stim += data_frame.iloc[row, 23]
+
     # Plot the averages in a scatterplot
     # X-axis values consist of IL-2 (pg/ml)
     x = np.array([25000, 8065, 2601, 839, 271, 87.3, 28.2, 0])
@@ -73,6 +90,8 @@ def plot_standard_curve():
     plt.legend()
     plt.show()
 
+    return m, background, DMSO_total, non_stim
+
 
 # Plots the positive control curve
 def plot_positive_control():
@@ -97,12 +116,15 @@ def plot_positive_control():
             averaged_positive_control.append(total / len(columns))
 
             total = 0
-
+        
     # Plot
     # Axes: x axis -> micromolar concetration values (set by experimenter)
     x = []
     for i in range(0,12):
-        x.append(2.5/(2**i))
+        x.append(math.log10((2.5/(2**i))))
+
+    print(x)
+    
     y = (averaged_positive_control)
 
     # Best-fit curve
@@ -130,13 +152,17 @@ def plot_positive_control():
 
     # Rounding max and EC50
     if len(ec_50) == 1:
-        ec_50 = round(ec_50[0], 5)
+        ec_50 = round(ec_50[0], 3)
+    
+    ec_50 = 10**ec_50
+    ec_50 = round(ec_50, 3)
+    
     maximum = round(maximum, 3)
 
     # Chart labels
-    plt.xlabel('uM')
+    plt.xlabel('uM (log10)')
     plt.ylabel('RLU')
-    plt.title(f'Positive Control Curve\nMax = {maximum}\nEC-50 = {ec_50}')
+    plt.title(f'Positive Control Curve\nMax = {maximum}\nEC-50 = {ec_50} uM')
 
     plt.plot(x, y, 'o', label = 'Data points')
     plt.plot(x, poly_y, label = 'Nonlinear regression line')
@@ -144,10 +170,70 @@ def plot_positive_control():
 
     plt.show()
 
+
+    # Plug in data points from plate into the equation from part 1 to get 320 new points.
+    # plot on IL-2 vs. Compound number (1 - 320)
+def plot_data():
+    
+    # Get the slope and background values calculated from standard curve
+    slope, background, DMSO, non_stim = plot_standard_curve()
+
+    data_path = '/Users/kevinxie/Desktop/Personal Projects/Data Analysis Project/Data/IL-2_CBLB_Jurkat_HTS_20240125 Jurkat Pharmaron array 20uM plate2 40min.xlsx'
+    columns = [i for i in range(3, 23)]
+    sheet = "Sheet1"
+    data_frame = process_excel(data_path, columns, sheet)
+
+
+    # Creating axes
+    x_axis = [i for i in range(1, 321)]
+    y_axis = []
+   
+    # Equation: RLU = m(x) + background
+    # y_axis = (datapoint - background)/m
+    # solve for x, and x = the y-axis in the final plot
+    for row in range(0, 16):
+        for column in range(0, 20):
+            y_axis.append((data_frame.iloc[row, column] - background) / slope)
+
+
+    # Add a DMSO y-label (and dotted line) from average of the 8 entries. 
+    # Add standard dev line as well
+    # Col 23: non-sti, DMSO = stimulation + DMSO. for non-stim = non-stimulation + DMSO
+        # Draw another non-stim line: average column 23
             
-# Call function
-plot_standard_curve()
-plot_positive_control()
+    # Standard deviation
+    standard_deviation = np.std(y_axis)
+
+    # DMSO averaged
+    avg_DMSO = DMSO / 8
+
+    # Plug DMSO into IL-2 equation
+    DMSO_value = ((avg_DMSO - background) / slope)
+
+    # Non-stimulation; 16 non-stim entries
+    avg_non_stim =  non_stim / 16
+
+    # Graph labels
+    plt.title('IL-2_CBLB_Jurkat_HTS_20240125 Jurkat Pharmaron array 20uM plate2 40min')
+    plt.xlabel('Compound Number')
+    plt.ylabel('IL-2 (pg/ml)')
+    plt.xticks([20*i for i in range(0,20)])
+
+    # Plots
+    plt.plot(x_axis, y_axis, 'o', label = 'Data Points')
+    plt.axhline(3*standard_deviation, 0, 1, linestyle = '--', color = 'red', label = '3 x Standard deviation')
+    plt.axhline(DMSO_value, 0, 1, linestyle = '--', color = 'green', label = 'DMSO')
+    plt.axhline(avg_non_stim, 0, 1, linestyle = '--', color = 'black', label = 'Non-Stimulation')
+
+    # Show
+    plt.legend()
+    plt.show()
+
+
+# Function call
+# plot_standard_curve()
+# plot_positive_control()
+plot_data()
 
 
 
