@@ -8,18 +8,10 @@ import math
 # Processes the excel sheet
 def process_excel(data_path, columns, sheet):
 
-    return pd.read_excel(data_path, usecols = columns, sheet_name= sheet)
+    return pd.read_excel(data_path, usecols = columns, sheet_name = sheet)
 
-    # The following gives all data entries in column B print(data_frame.iloc[1])
-    # The following gives all entires in ROW B print(data_frame.iloc[[1]]). For rows, you should start at index 0
-    # Gives the entry in the first row, column 24, 126135: print(data_frame.iloc[0, 24])
-
-def plot_standard_curve():
-
-    # Process desired excel sheet
-    data_path = '/Users/kevinxie/Desktop/Personal Projects/Data Analysis Project/Data/IL-2_CBLB_Jurkat_HTS_20240125 Jurkat Pharmaron array 20uM plate2 40min.xlsx'
+def plot_standard_curve(data_path, sheet):
     columns = [i for i in range(0,25)]
-    sheet = "Sheet1"
 
     data_frame = process_excel(data_path, columns, sheet)
 
@@ -44,7 +36,7 @@ def plot_standard_curve():
             total += data_frame.iloc[i, 24]  
             counter += 1
 
-     # DMSO Calculation
+    # DMSO Calculation
     DMSO_total = 0
     for row in range(0,2):
         for column in range(1,3):
@@ -55,7 +47,6 @@ def plot_standard_curve():
             DMSO_total += data_frame.iloc[row, column]
 
     # Non-stimulation calculation
-    # Exists in column 23
     non_stim = 0
     for row in range(0, 16):
         non_stim += data_frame.iloc[row, 23]
@@ -82,29 +73,20 @@ def plot_standard_curve():
     # Plots line of best fit
     plt.plot(x, m * x, color = 'red', label = 'Linear regression')
 
-    # # Labels for each data point; may not be necessary
-    # for i, j in zip(x, y):
-    #     plt.text(i, j+0.5, '({}, {})'.format(i, j), )
-
     # Show legend and plot
     plt.legend()
     plt.show()
 
     return m, background, DMSO_total, non_stim
 
-
 # Plots the positive control curve
-def plot_positive_control():
-    
-    data_path = '/Users/kevinxie/Desktop/Personal Projects/Data Analysis Project/Data/IL-2_CBLB_Jurkat_HTS_20240125 Jurkat Pharmaron array 20uM plate2 40min.xlsx'
+def plot_positive_control(data_path, sheet):
     columns = [1, 2]
-    sheet = "Sheet1"
     data_frame = process_excel(data_path, columns, sheet)
     
     # Averages the positive control; stores in new list
     averaged_positive_control = []
     total = 0
-
     # First and last two rows are not used
     for row in range(2, 14):
         if row == 15:
@@ -123,18 +105,15 @@ def plot_positive_control():
     for i in range(0,12):
         x.append(math.log10((2.5/(2**i))))
 
-    print(x)
-    
     y = (averaged_positive_control)
 
     # Best-fit curve
     curve = np.polyfit(x, y, 5)
-    polynomial_equation = np.poly1d(curve)
     x = np.array(x)
 
     poly_y = (curve[0]* x**5) + (curve[1]* x**4)+ (curve[2]*x**3) + (curve[3]*x**2) + (curve[4]*x) + (curve[5])
 
-    # Max and EC-50 (When Max = 50%, what is the x-axis value)
+    # Max and EC-50
     maximum = max(y)
     half_max = maximum/2
 
@@ -170,36 +149,25 @@ def plot_positive_control():
 
     plt.show()
 
-
     # Plug in data points from plate into the equation from part 1 to get 320 new points.
     # plot on IL-2 vs. Compound number (1 - 320)
-def plot_data():
+def plot_data(data_path, sheet):
     
     # Get the slope and background values calculated from standard curve
-    slope, background, DMSO, non_stim = plot_standard_curve()
+    slope, background, DMSO, non_stim = plot_standard_curve(data_path, sheet)
 
-    data_path = '/Users/kevinxie/Desktop/Personal Projects/Data Analysis Project/Data/IL-2_CBLB_Jurkat_HTS_20240125 Jurkat Pharmaron array 20uM plate2 40min.xlsx'
     columns = [i for i in range(3, 23)]
-    sheet = "Sheet1"
-    data_frame = process_excel(data_path, columns, sheet)
 
+    data_frame = process_excel(data_path, columns, sheet)
 
     # Creating axes
     x_axis = [i for i in range(1, 321)]
     y_axis = []
    
     # Equation: RLU = m(x) + background
-    # y_axis = (datapoint - background)/m
-    # solve for x, and x = the y-axis in the final plot
     for row in range(0, 16):
         for column in range(0, 20):
             y_axis.append((data_frame.iloc[row, column] - background) / slope)
-
-
-    # Add a DMSO y-label (and dotted line) from average of the 8 entries. 
-    # Add standard dev line as well
-    # Col 23: non-sti, DMSO = stimulation + DMSO. for non-stim = non-stimulation + DMSO
-        # Draw another non-stim line: average column 23
             
     # Standard deviation
     standard_deviation = np.std(y_axis)
@@ -211,10 +179,10 @@ def plot_data():
     DMSO_value = ((avg_DMSO - background) / slope)
 
     # Non-stimulation; 16 non-stim entries
-    avg_non_stim =  non_stim / 16
+    avg_non_stim =  non_stim / 160
 
     # Graph labels
-    plt.title('IL-2_CBLB_Jurkat_HTS_20240125 Jurkat Pharmaron array 20uM plate2 40min')
+    plt.title('IL-2 CBLB Jurkat HTS Jurkat Pharmaron Array 20uM')
     plt.xlabel('Compound Number')
     plt.ylabel('IL-2 (pg/ml)')
     plt.xticks([20*i for i in range(0,20)])
@@ -230,10 +198,13 @@ def plot_data():
     plt.show()
 
 
+data_path = '/Users/kevinxie/Desktop/Personal Projects/Data Analysis Project/Data/IL-2 CBLB Jurkat HTS Jurkat Pharmaron Array 20uM.xlsx'
+sheet = 'Sheet1'
+
 # Function call
-# plot_standard_curve()
-# plot_positive_control()
-plot_data()
+plot_standard_curve(data_path, sheet)
+plot_positive_control(data_path, sheet)
+plot_data(data_path, sheet)
 
 
 
