@@ -41,7 +41,9 @@ Python 3.7+ and the following packages are required:
 
 - **Visualization of potential drug candidates**: Dots above the STD, DMSO, and Non-Stim lines indicate highly active and statistically significant compounds.
 
-<img src="Scatterplot.png" alt="drawing" width="800" height = "500"/>
+
+<img width="800" alt="Scatterplot" src="https://github.com/kevinxie06/Data-Analysis-Project/assets/135569406/dca772ce-1f42-4ebf-9188-5aad0569a179">
+
 
 ### Experiment Validation and EC-50
 
@@ -53,7 +55,8 @@ Python 3.7+ and the following packages are required:
 
 - **Evaluate Experimental Accuracy**: Use the positive control curve to validate the accuracy and reliability of experimental results, ensuring consistent and reproducible outcomes.
 
-<img src="Positive Control Curve.png" alt="drawing" width="800" height = "500"/>
+
+<img width="800" alt="Positive Control Curve" src="https://github.com/kevinxie06/Data-Analysis-Project/assets/135569406/55131730-46eb-494b-9a8b-f3eaae2f4dab">
 
 ### Determine Concentration of an Unknown Sample
 
@@ -64,7 +67,7 @@ Python 3.7+ and the following packages are required:
 - **Normalization and Quality Control**: Use the standard curve to normalize data across different experiments and maintain quality control, identifying any inconsistencies or deviations in the assay.
 
 
-<img src="Standard Curve Plot.png" alt="drawing" width="800" height = "500"/>
+<img width="800" alt="Standard Curve Plot" src="https://github.com/kevinxie06/Data-Analysis-Project/assets/135569406/286b3f20-23a4-4384-9c62-c6ab0f199a24">
 
 
 Thank you for considering my work and using my program! I hope it aids your research in drug discovery!
