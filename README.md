@@ -3,14 +3,14 @@
 ## Overview
 The process of drug discovery via high-throughput screening (HTS) is *lengthy* and *resource-intensive*.
 
-For example, for the **Rapafucin** library of macrocyles, there exists over **250,000 compounds** that researchers must *manually* analyze to identify potential new medicines that can safety hit intracellular targets and cure diseases.
+For example, many chemical libraries have **hundreds of thousands of compounds** that researchers must *manually* analyze to identify potential new medicines that can safety hit intracellular targets and cure diseases.
 
 **To address this**, I developed a Python program that **automatically processes high-throughput screening results and identifies the most effective drug candidates**.
 
 The goal of this project is to **accelerate drug discovery**, ultimately **enhancing medicines** and **improving patient outcomes**.
 
 ## Data Description
-This section provides an overview of the data used for the project. Sample data can be found in the [Data Folder](https://github.com/kevinxie06/Data-Analysis-Project/blob/main/Data/IL-2%20CBLB%20Jurkat%20HTS%20Jurkat%20Pharmaron%20Array%2020uM.xlsx).
+This section provides an overview of the data used for the project.
 
 - **Excel Sheet Input**: All HTS results were stored in an Excel sheet.
 
@@ -25,12 +25,22 @@ This section provides an overview of the data used for the project. Sample data 
 
 ## Requirements
 ### Installation
-Python 3.7+ and the following packages are required:
+Python 3.9+ and the following packages are required:
 - [Python](https://www.python.org/downloads/)
 - [NumPy](https://numpy.org/)
 - [Pandas](https://pandas.pydata.org/)
 - [Matplotlib](https://matplotlib.org/)
 
+Install the necessary dependencies using:
+```
+pip install pandas
+```
+```
+pip install numpy
+```
+```
+pip install matplotlib
+```
 
 ## Key Features
 ### Drug Discovery
@@ -41,9 +51,8 @@ Python 3.7+ and the following packages are required:
 
 - **Visualization of potential drug candidates**: Dots above the STD, DMSO, and Non-Stim lines indicate highly active and statistically significant compounds.
 
-
-<img width="800" alt="Scatterplot" src="https://github.com/kevinxie06/Data-Analysis-Project/assets/135569406/dca772ce-1f42-4ebf-9188-5aad0569a179">
-
+<p align = "center">
+<img width="800" alt="Sample IL2 Plot" src="https://github.com/kevinxie06/Automated-HTS-Analysis-for-Drug-Discovery/assets/135569406/80cc5d85-5df8-476d-a3ea-fb9d4901b12a">
 
 ### Experiment Validation and EC-50
 
@@ -56,7 +65,9 @@ Python 3.7+ and the following packages are required:
 - **Evaluate Experimental Accuracy**: Use the positive control curve to validate the accuracy and reliability of experimental results, ensuring consistent and reproducible outcomes.
 
 
+<p align = "center">
 <img width="800" alt="Positive Control Curve" src="https://github.com/kevinxie06/Data-Analysis-Project/assets/135569406/55131730-46eb-494b-9a8b-f3eaae2f4dab">
+
 
 ### Determine Concentration of an Unknown Sample
 
@@ -67,6 +78,7 @@ Python 3.7+ and the following packages are required:
 - **Normalization and Quality Control**: Use the standard curve to normalize data across different experiments and maintain quality control, identifying any inconsistencies or deviations in the assay.
 
 
+<p align = "center">
 <img width="800" alt="Standard Curve Plot" src="https://github.com/kevinxie06/Data-Analysis-Project/assets/135569406/286b3f20-23a4-4384-9c62-c6ab0f199a24">
 
 
