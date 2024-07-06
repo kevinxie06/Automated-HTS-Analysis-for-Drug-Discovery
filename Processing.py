@@ -182,7 +182,7 @@ def plot_data(data_path, sheet):
     avg_non_stim =  non_stim / 160
 
     # Graph labels
-    plt.title('IL-2 CBLB Jurkat HTS Jurkat Pharmaron Array 20uM')
+    plt.title('Sample IL-2 Plot')
     plt.xlabel('Compound Number')
     plt.ylabel('IL-2 (pg/ml)')
     plt.xticks([20*i for i in range(0,20)])
@@ -198,7 +198,7 @@ def plot_data(data_path, sheet):
     plt.show()
 
 
-data_path = '/Users/kevinxie/Desktop/Personal Projects/Data Analysis Project/Data/IL-2 CBLB Jurkat HTS Jurkat Pharmaron Array 20uM.xlsx'
+data_path = '/Users/kevinxie/Data.xlsx'
 sheet = 'Sheet1'
 
 # Function call
